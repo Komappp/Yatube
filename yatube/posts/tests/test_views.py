@@ -182,27 +182,34 @@ class PostsViewsTests(TestCase):
             response = self.client.get(value + '?page=2')
             self.assertEqual(len(response.context['page_obj']), 3)
 
-    def test_authorized_can_follow_and_unfollow(self):
-        """Авторизованный пользователь может подписываться и отписываться,
-        посты появляются в ленте у тех кто подписан, у тех кто не подписан
-        не появляются"""
+    def get_follower_and_create_follow(self):
+        """Функция для создания подписчика и подписки"""
         follower = Client()
-        notfollower = Client()
         follower.force_login(PostsViewsTests.follower)
-        notfollower.force_login(PostsViewsTests.notfollower)
         follower.get(reverse(
             'posts:profile_follow',
             kwargs={'username': 'auth'}
         ))
+        return follower
+
+    def test_authorized_can_follow(self):
+        """Авторизованный пользователь может подписываться"""
+        self.get_follower_and_create_follow()
         is_following = Follow.objects.filter(
             user=PostsViewsTests.follower,
             author=PostsViewsTests.user
         ).exists()
         self.assertTrue(is_following)
+
+    def test_posts_show_for_follower(self):
+        """Посты автора видны подписчикам на странице Мои подписки"""
+        follower = self.get_follower_and_create_follow()
         response = follower.get(reverse('posts:follow_index'))
         self.post_and_page_objects_tests(response)
-        response = notfollower.get(reverse('posts:follow_index'))
-        self.assertFalse(response.context.get('page_obj'))
+
+    def test_can_unfollow(self):
+        """Авторизованный пользователь может отписаться"""
+        follower = self.get_follower_and_create_follow()
         follower.get(reverse(
             'posts:profile_unfollow',
             kwargs={'username': 'auth'}
@@ -212,3 +219,11 @@ class PostsViewsTests(TestCase):
             author=PostsViewsTests.user
         ).exists()
         self.assertFalse(is_following)
+
+    def test_posts_not_show_for_notfollower(self):
+        """Посты автора не видны тем
+        кто не подписан на странице Мои подписки"""
+        notfollower = Client()
+        notfollower.force_login(PostsViewsTests.notfollower)
+        response = notfollower.get(reverse('posts:follow_index'))
+        self.assertFalse(response.context.get('page_obj'))
