@@ -1,5 +1,4 @@
 {% load thumbnail %}
-{% for post in page_obj %}
         <ul>
           <li>
             Автор: {{ post.author.get_full_name }} 
@@ -17,9 +16,8 @@
         <p>{{ post.text }}</p>
         <a href="{% url 'posts:post_detail' post.id %}">подробная информация</a>    
         <p>
-        {% if post.group %}   
-          <a href="{% url 'posts:group_posts' post.group.slug %}">все записи группы</a>
-        {% endif %}
-        {% if not forloop.last %}<hr>{% endif %}
+          {% if post.group %}   
+            <a href="{% url 'posts:group_posts' post.group.slug %}">все записи группы</a>
+          {% endif %}
+          {% if not forloop.last %}<hr>{% endif %}
         </p>
-      {% endfor %}
