@@ -11,7 +11,7 @@
 Системные требования
 ----------
 * Python 3.7+
-* Works on Linux, Windows, macOS, BSD
+* Works on Linux, Windows, macOS
 
 Стек технологий
 ----------
@@ -23,7 +23,7 @@
 * CSS
 * HTML
 
-Установка проекта из репозитория
+Как запустить проект:
 ----------
 
 1. Клонировать репозиторий и перейти в него в командной строке:
@@ -54,3 +54,5 @@ python3 manage.py migrate
 ```bash
 python3 manage.py runserver
 ```
+## Для данного проекта реализован API:
+https://github.com/Komappp/api_final_yatube
