@@ -30,13 +30,13 @@
 ```bash
 git clone git@github.com:Komappp/Yatube.git
 
-cd YaTube
+cd yatube
 ```
 2. Cоздать и активировать виртуальное окружение:
 ```bash
-python3 -m venv env
+python3 -m venv venv
 
-source env/bin/activate
+source venv/bin/activate
 ```
 3. Установить зависимости из файла ```requirements.txt```:
 ```bash
